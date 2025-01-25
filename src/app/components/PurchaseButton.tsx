@@ -1,19 +1,16 @@
+"use client";
+
 import axios from "axios";
 import React from "react";
 import Script from "next/script";
 import { createOrderId } from "@/utils/createOrderId";
 
-export default function PurchaseButton({
-  price,
-  buttonTitle,
-}: {
-  price: number;
-  buttonTitle: string;
-}) {
+export default function PurchaseButton() {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const handlePayment = async () => {
     setIsLoading(true);
+    const price = 100; // Replace with dynamic price
     try {
       const orderId: string = await createOrderId(price, "INR");
       const options = {
@@ -25,14 +22,11 @@ export default function PurchaseButton({
         order_id: orderId,
         handler: async function (response: any) {
           try {
-            const paymentResponse = await axios.post(
-              "/api/payment/verifyOrder",
-              {
-                razorpay_order_id: orderId,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-              }
-            );
+            const paymentResponse = await axios.post("/api/verifyOrder", {
+              razorpay_order_id: orderId,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
 
             alert("Payment Successful!");
             console.log(paymentResponse.data);
@@ -66,8 +60,12 @@ export default function PurchaseButton({
 
   return (
     <>
-      <button onClick={handlePayment} disabled={isLoading}>
-        {isLoading ? "Processing..." : buttonTitle}
+      <button
+        className="bg-emerald-700 text-white font-semibold px-4 py-2 rounded-xl hover:bg-emerald-600 transition-all duration-300 hover:shadow-lg hover:scale-105"
+        onClick={handlePayment}
+        disabled={isLoading}
+      >
+        {isLoading ? "Processing..." : "Buy Now"}
       </button>
       <Script
         id="razorpay-checkout-js"

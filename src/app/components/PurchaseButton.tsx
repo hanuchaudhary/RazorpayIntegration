@@ -17,8 +17,8 @@ export default function PurchaseButton() {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: price * 100,
         currency: "INR",
-        name: "CrossPostHub",
-        description: "Payment for subscription",
+        name: "YOUR_COMPANY_NAME", // Replace with dynamic company name
+        description: "Payment for your order", // Replace with dynamic order description
         order_id: orderId,
         handler: async function (response: any) {
           try {
